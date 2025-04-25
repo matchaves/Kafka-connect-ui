@@ -17,10 +17,11 @@
 
 <h1>Kafka Connect - Editor de Connector</h1>
 
-<form id="load-form" hx-get="/load" hx-target="#editor" hx-swap="outerHTML">
+<form id="load-form" hx-get="/load" hx-target="#editor-container" hx-swap="innerHTML">
     <input type="text" name="name" placeholder="Nome do Connector" required>
     <button type="submit">Carregar Connector</button>
 </form>
+
 
 <br>
 
@@ -28,6 +29,10 @@
     <textarea id="editor-json" name="json" style="display:none;"></textarea>
     <button type="submit" onclick="updateJson()">Salvar Alterações</button>
 </form>
+
+<div id="editor-container">
+    <!-- O editor aparece aqui dinamicamente -->
+</div>
 
 <div id="editor"></div>
 

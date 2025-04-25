@@ -64,9 +64,24 @@ func handleLoadConnector(w http.ResponseWriter, r *http.Request) {
 	defer resp.Body.Close()
 
 	body, _ := io.ReadAll(resp.Body)
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(body)
+
+	// Renderizar um <textarea> com o conteúdo para o HTMX substituir
+	w.Header().Set("Content-Type", "text/html")
+	fmt.Fprintf(w, `<textarea id="editor-json" name="json" style="display:none;">%s</textarea>
+<div id="editor"></div>
+
+<script>
+    if (window.editor) {
+        editor.toTextArea();
+    }
+    editor = CodeMirror.fromTextArea(document.getElementById("editor-json"), {
+        lineNumbers: true,
+        mode: "application/json",
+        theme: "default"
+    });
+</script>`, body)
 }
+
 
 func handleUpdateConnector(w http.ResponseWriter, r *http.Request) {
 	connectorName := r.URL.Query().Get("name")
