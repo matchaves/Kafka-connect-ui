@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Editor de Connectors Kafka Connect</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link rel="stylesheet" href="/static/codemirror/lib/codemirror.css">
+    <script src="/static/codemirror/lib/codemirror.js"></script>
+    <script src="/static/codemirror/mode/javascript/javascript.js"></script>
+
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        #editor { height: 400px; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+
+<h1>Kafka Connect - Editor de Connector</h1>
+
+<form id="load-form" hx-get="/load" hx-target="#editor" hx-swap="outerHTML">
+    <input type="text" name="name" placeholder="Nome do Connector" required>
+    <button type="submit">Carregar Connector</button>
+</form>
+
+<br>
+
+<form id="editor-form" hx-post="/update" hx-include="#editor-json" hx-target="#response">
+    <textarea id="editor-json" name="json" style="display:none;"></textarea>
+    <button type="submit" onclick="updateJson()">Salvar Alterações</button>
+</form>
+
+<div id="editor"></div>
+
+<div id="response"></div>
+
+<script>
+    let editor = CodeMirror(document.getElementById("editor"), {
+        lineNumbers: true,
+        mode: "application/json",
+        theme: "default"
+    });
+
+    function updateJson() {
+        document.getElementById("editor-json").value = editor.getValue();
+    }
+
+    document.body.addEventListener('htmx:afterOnLoad', function(evt) {
+        if (evt.detail.target.id === 'editor') {
+            editor.setValue(JSON.stringify(JSON.parse(evt.detail.xhr.responseText), null, 2));
+        }
+    });
+</script>
+
+</body>
+</html>
