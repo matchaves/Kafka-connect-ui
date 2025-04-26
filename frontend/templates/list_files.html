@@ -13,32 +13,29 @@
             </a>
         </div>
 
-        <div class="mb-4">
-            <select 
-                id="file-select" 
-                class="p-2 border rounded w-64"
-                hx-get="/edit/{value}"
-                hx-target="#main-container"
-                hx-trigger="change"
-                name="file"
-            >
-                <option value="">Select a file</option>
-            </select>
-            <div id="file-list" hx-get="/api/files" hx-trigger="load" hx-swap="none"></div>
-            <script>
-                document.getElementById('file-list').addEventListener('htmx:afterRequest', function(evt) {
-                    if (evt.detail.xhr.response) {
-                        const files = JSON.parse(evt.detail.xhr.response);
-                        const select = document.getElementById('file-select');
-                        files.forEach(file => {
-                            const option = document.createElement('option');
-                            option.value = file;
-                            option.textContent = file;
-                            select.appendChild(option);
-                        });
-                    }
-                });
-            </script>
-        </div>
+        <ul id="file-list" class="space-y-2">
+            <!-- Arquivos serão inseridos aqui -->
+        </ul>
+        <div id="file-list-data" hx-get="/api/files" hx-trigger="load" hx-swap="none"></div>
+        <script>
+            document.getElementById('file-list-data').addEventListener('htmx:afterRequest', function(evt) {
+                if (evt.detail.xhr.response) {
+                    const files = JSON.parse(evt.detail.xhr.response);
+                    const ul = document.getElementById('file-list');
+                    ul.innerHTML = ''; // Limpa a lista existente
+                    files.forEach(file => {
+                        const li = document.createElement('li');
+                        const a = document.createElement('a');
+                        a.href = `/edit/${file}`;
+                        a.textContent = file;
+                        a.className = 'text-blue-500 hover:underline';
+                        a.setAttribute('hx-get', `/edit/${file}`);
+                        a.setAttribute('hx-target', '#main-container');
+                        li.appendChild(a);
+                        ul.appendChild(li);
+                    });
+                }
+            });
+        </script>
     </div>
 </div>
