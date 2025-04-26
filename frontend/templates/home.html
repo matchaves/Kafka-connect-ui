@@ -1,0 +1,32 @@
+<div class="min-h-screen bg-gray-100 p-4">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-2xl font-bold mb-4">JSON Editor</h1>
+        
+        <div class="flex flex-col space-y-4">
+            <a 
+                href="/list" 
+                class="bg-blue-500 text-white p-4 rounded hover:bg-blue-600 text-center"
+                hx-get="/list"
+                hx-target="#main-container"
+            >
+                Listar Arquivos
+            </a>
+            <a 
+                href="/create" 
+                class="bg-green-500 text-white p-4 rounded hover:bg-green-600 text-center"
+                hx-get="/create"
+                hx-target="#main-container"
+            >
+                Criar Novo Arquivo
+            </a>
+            <a 
+                href="/list" 
+                class="bg-yellow-500 text-white p-4 rounded hover:bg-yellow-600 text-center"
+                hx-get="/list"
+                hx-target="#main-container"
+            >
+                Editar Arquivos
+            </a>
+        </div>
+    </div>
+</div>

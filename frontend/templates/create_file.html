@@ -1,0 +1,36 @@
+<div class="min-h-screen bg-gray-100 p-4">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-2xl font-bold mb-4">Criar Novo Arquivo JSON</h1>
+        
+        <div class="mb-4">
+            <a 
+                href="/" 
+                class="bg-gray-500 text-white p-2 rounded hover:bg-gray-600"
+                hx-get="/"
+                hx-target="#main-container"
+            >
+                Voltar
+            </a>
+        </div>
+
+        <form hx-post="/api/file" hx-target="#main-container" hx-swap="innerHTML" hx-encoding="multipart/form-data">
+            <div class="mb-4">
+                <input
+                    type="text"
+                    class="p-2 border rounded w-64"
+                    id="file-name"
+                    name="name"
+                    placeholder="File name (e.g., config.json)"
+                    required
+                >
+                <button
+                    type="submit"
+                    class="ml-2 bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+                >
+                    Save
+                </button>
+            </div>
+            <textarea id="json-editor" name="content">{"example": "value"}</textarea>
+        </form>
+    </div>
+</div>

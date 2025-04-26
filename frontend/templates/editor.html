@@ -1,0 +1,40 @@
+<div class="min-h-screen bg-gray-100 p-4">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-2xl font-bold mb-4">Online Code Editor</h1>
+        
+        <div class="mb-4">
+            <div class="flex border-b border-gray-300">
+                <a href="/new" class="px-4 py-2 -mb-px text-gray-700 hover:text-blue-600" hx-get="/new" hx-target="#editor-container">New File</a>
+                <a href="/" class="px-4 py-2 -mb-px text-gray-700 hover:text-blue-600 border-b-2 border-blue-500" hx-get="/" hx-target="#editor-container">Edit File</a>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <select 
+                id="file-select" 
+                class="p-2 border rounded w-64"
+                hx-get="/edit/{value}"
+                hx-target="#editor-container"
+                hx-trigger="change"
+                name="file"
+            >
+                <option value="">Select a file</option>
+            </select>
+            <div id="file-list" hx-get="/api/files" hx-trigger="load" hx-swap="none"></div>
+            <script>
+                document.getElementById('file-list').addEventListener('htmx:afterRequest', function(evt) {
+                    if (evt.detail.xhr.response) {
+                        const files = JSON.parse(evt.detail.xhr.response);
+                        const select = document.getElementById('file-select');
+                        files.forEach(file => {
+                            const option = document.createElement('option');
+                            option.value = file;
+                            option.textContent = file;
+                            select.appendChild(option);
+                        });
+                    }
+                });
+            </script>
+        </div>
+    </div>
+</div>

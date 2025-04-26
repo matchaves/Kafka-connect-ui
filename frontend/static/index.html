@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Editor</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="/static/codemirror/codemirror.min.css">
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="/static/codemirror/codemirror.min.js"></script>
+    <script src="/static/codemirror/mode/javascript/javascript.min.js"></script>
+    <link rel="stylesheet" href="/static/codemirror/theme/monokai.min.css">
+</head>
+<body>
+    <div id="main-container" hx-get="/" hx-trigger="load"></div>
+    <script>
+        document.body.addEventListener('htmx:afterSwap', function() {
+            const textarea = document.querySelector('#json-editor');
+            if (textarea && !textarea.CodeMirror) {
+                const editor = CodeMirror.fromTextArea(textarea, {
+                    lineNumbers: true,
+                    mode: 'application/json',
+                    theme: 'monokai'
+                });
+                editor.on('change', () => {
+                    textarea.value = editor.getValue();
+                });
+            }
+        });
+        document.body.addEventListener('htmx:afterRequest', function(evt) {
+            if (evt.detail.xhr.response && evt.detail.xhr.response.includes('"content"')) {
+                const response = JSON.parse(evt.detail.xhr.response);
+                const textarea = document.querySelector('#json-editor');
+                if (textarea && textarea.CodeMirror) {
+                    textarea.CodeMirror.setValue(response.content || '{}');
+                } else if (textarea) {
+                    textarea.value = response.content || '{}';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<div class="min-h-screen bg-gray-100 p-4">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-2xl font-bold mb-4">Editar Arquivo JSON</h1>
+        
+        <div class="mb-4">
+            <a 
+                href="/" 
+                class="bg-gray-500 text-white p-2 rounded hover:bg-gray-600"
+                hx-get="/"
+                hx-target="#main-container"
+            >
+                Voltar
+            </a>
+        </div>
+
+        <div class="mb-4">
+            <form hx-post="/api/file" hx-target="#main-container" hx-swap="innerHTML" hx-encoding="multipart/form-data">
+                <input
+                    type="text"
+                    class="p-2 border rounded w-64"
+                    id="file-name"
+                    name="name"
+                    value="{{.FileName}}"
+                    required
+                >
+                <button
+                    type="submit"
+                    class="ml-2 bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+                >
+                    Save
+                </button>
+                <textarea id="json-editor" name="content"></textarea>
+            </form>
+            <div id="file-content" hx-get="/api/file/{{.FileName}}" hx-trigger="load" hx-swap="none"></div>
+            <script>
+                document.getElementById('file-content').addEventListener('htmx:afterRequest', function(evt) {
+                    if (evt.detail.xhr.response) {
+                        const response = JSON.parse(evt.detail.xhr.response);
+                        const textarea = document.getElementById('json-editor');
+                        if (textarea && textarea.CodeMirror) {
+                            textarea.CodeMirror.setValue(response.content || '{}');
+                        } else {
+                            textarea.value = response.content || '{}';
+                        }
+                    }
+                });
+            </script>
+        </div>
+    </div>
+</div>
